@@ -645,7 +645,9 @@ InteractionManager.prototype.processTouchStart = function ( displayObject, hit )
     //console.log("hit" + hit)
     if(hit)
     {
-        displayObject._touchDown = true;
+        if(typeof displayObject._touchCount === "undefined")
+            displayObject._touchCount = 0;
+        displayObject._touchCount ++;
         this.dispatchEvent( displayObject, 'touchstart', this.eventData );
     }
 };
@@ -698,17 +700,17 @@ InteractionManager.prototype.processTouchEnd = function ( displayObject, hit )
     {
         this.dispatchEvent( displayObject, 'touchend', this.eventData );
 
-        if( displayObject._touchDown )
+        if( displayObject._touchCount > 0 )
         {
-            displayObject._touchDown = false;
+            displayObject._touchCount --;
             this.dispatchEvent( displayObject, 'tap', this.eventData );
         }
     }
     else
     {
-        if( displayObject._touchDown )
+        if( displayObject._touchCount > 0 )
         {
-            displayObject._touchDown = false;
+            displayObject._touchCount --;
             this.dispatchEvent( displayObject, 'touchendoutside', this.eventData );
         }
     }
